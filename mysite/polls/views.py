@@ -50,37 +50,48 @@ def vote(request, question_id):
 
     return HttpResponseRedirect(reverse("polls:results", args=(question.id,)))
 
-# CSRF flaw, fix by removing @csrf_exempt
 @csrf_exempt
-# A5:2017-Broken Access Control, fix by adding @login_required
-# @login_required
+# A5:2017-Broken Access Control, only admins should be able to add polls
 def add(request):
-    # A5:2017-Broken Access Control https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control.html
-    # Only admins should be able to add polls, fix:
-    # if not request.user.is_superuser:
-    #    return HttpResponseRedirect("/polls")
-
     if request.method == 'POST':
         # A1:2017-Injection https://owasp.org/www-project-top-ten/2017/A1_2017-Injection.html
         # Example malicious question_text: '); DROP TABLE polls_question; --
         question_text = request.POST.get('question_text')
-        
-        # For partial defense server-side validation
-        # pattern = r'^[A-Za-zA-Z0-9, ]*[?]$'
-        # if not re.match(pattern, question_text):
-        #     context = {"user": request.user, "error_message": "Only alphanumeric input with question mark allowed."}
-        #     return render(request, "polls/add.html", context)
-
         connection = sqlite3.connect('db.sqlite3')
         cursor = connection.cursor()
         query = f"INSERT INTO polls_question (votes_yes, votes_no, question_text) VALUES (0, 0, '{question_text}');"
         cursor.executescript(query)
         connection.commit()
         connection.close()
-        # Fix:
-        # Question.objects.create(question_text=question_text)
 
         return HttpResponseRedirect("/polls")
     
     context = {"user": request.user}
     return render(request, "polls/add.html", context)
+
+'''
+# Fix CSRF flaw by removing @csrf_exempt
+# Fix A5:2017-Broken Access Control by adding @login_required
+@login_required
+def add(request):
+    # Fix A5:2017-Broken Access Control by checking superuser
+    if not request.user.is_superuser:
+        return HttpResponseRedirect("/polls")
+
+    if request.method == 'POST':
+        question_text = request.POST.get('question_text')
+        
+        # Partial fix for A1:2017-Injection by adding server-side validation
+        pattern = r'^[A-Za-zA-Z0-9, ]*[?]$'
+        if not re.match(pattern, question_text):
+            context = {"user": request.user, "error_message": "Only alphanumeric input with question mark allowed."}
+            return render(request, "polls/add.html", context)
+        
+        # Fix A1:2017-Injection by using Django's ORM
+        Question.objects.create(question_text=question_text)
+
+        return HttpResponseRedirect("/polls")
+    
+    context = {"user": request.user}
+    return render(request, "polls/add.html", context)
+'''
