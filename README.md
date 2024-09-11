@@ -15,7 +15,7 @@ See [Cyber Security Base installation guide](https://cybersecuritybase.mooc.fi/i
 2. Clone the repository
 
 ```
-git clone https://github.com/...
+git clone https://github.com/joonasjarv/mooc-cyber-security-base-2024-project1
 cd mooc-cyber-security-base-2024-project1/mysite
 ```
 
