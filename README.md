@@ -25,7 +25,7 @@ cd mooc-cyber-security-base-2024-project1/mysite
 python3 manage.py migrate
 ```
 
-1. Start the development server
+4. Start the development server
 
 ```
 python3 manage.py runserver
