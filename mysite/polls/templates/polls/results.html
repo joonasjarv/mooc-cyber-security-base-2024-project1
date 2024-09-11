@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Results: {{ question.question_text }}</title>
+  </head>
+  <body>
+    <h1>{{ question.question_text }}</h1>
+
+    <ul>
+      <li>Yes -- {{ question.votes_yes }} vote{{ question.votes_yes|pluralize }}</li>
+      <li>No -- {{ question.votes_no }} vote{{ question.votes_no|pluralize }}</li>
+    </ul>
+    
+    <a href="{% url 'polls:detail' question.id %}">Vote again?</a>
+  </body>
+</html>

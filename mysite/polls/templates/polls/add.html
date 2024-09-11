@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Add a new question</title>
+    </head>
+
+
+    <body>
+      <h1>Add a new question</h1>
+
+      <form action="{% url 'polls:add' %}" method="POST">
+        <!-- CSRF flaw, fix by adding csrf_token -->
+        <!-- {% csrf_token %} -->
+
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <input type="text" name="question_text" required/>
+        <br/>
+        <input type="submit" value="Send"/>
+      </form>
+
+      {% if user.is_authenticated %}
+      <h2>Username: {{user.username}}</h2>
+      <form action="/logout/" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Logout"/>
+      </form>
+      {% endif %}
+    </body>
+
+
+    </body>
+</html>

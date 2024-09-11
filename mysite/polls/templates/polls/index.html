@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Polls</title>
+  </head>
+  <body>
+    <h1>Polls</h1>
+    {% if list %}
+        <ul>
+        {% for question in list %}
+          <!-- A7:2017-Cross-Site Scripting (XSS) https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS).html -->
+          <!-- Example malicios question_text: <script>var data = new Object();data.content = document.cookie;alert(document.cookie);</script> -->
+          <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text|safe }}</a></li>
+
+          <!-- Fix for A7:2017-Cross-Site Scripting (XSS) -->
+          <!-- <li><a href="{% url 'polls:detail' question.id %}">{{ question.question_text }}</a></li> -->
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No polls are available.</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+    <h2>Username: {{user.username}}</h2>
+    <form action="/logout/" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="Logout"/>
+    </form>
+    {% endif %}
+  </body>
+</html>

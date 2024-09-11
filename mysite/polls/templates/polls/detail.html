@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Poll: {{ question.question_text }}</title>
+  </head>
+  <body>
+    <form action="{% url 'polls:vote' question.id %}" method="post">
+      {% csrf_token %}
+      <fieldset required>
+          <legend><h1>{{ question.question_text }}</h1></legend>
+          {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+          <input type="radio" name="choice" id="choice-yes" value="yes">
+          <label for="choice-yes">Yes</label><br>
+
+          <input type="radio" name="choice" id="choice-no" value="no">
+          <label for="choice-no">No</label><br>
+
+      </fieldset>
+      <input type="submit" value="Vote">
+      </form>
+  </body>
+</html>
