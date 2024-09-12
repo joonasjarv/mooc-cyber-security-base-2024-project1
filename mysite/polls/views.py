@@ -88,7 +88,8 @@ def add(request):
             return render(request, "polls/add.html", context)
         
         # Fix A1:2017-Injection by using Django's ORM
-        Question.objects.create(question_text=question_text)
+        question = Question.objects.create(question_text=question_text)
+        question.save()
 
         return HttpResponseRedirect("/polls")
     
